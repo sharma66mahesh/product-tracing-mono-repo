@@ -43,7 +43,7 @@ contract Tracing{
     
     // for transfer a product to buyer requesting it to transfer
     function exchange(address _buyeraddress, address _selleraddress, Product memory _product) public isProduct(_product) returns(bool){
-        
+        require(_product.exchange==true && product_to_address[_product.product_no]==owner);
     }
     
     
