@@ -1,24 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+// import { ethers } from "ethers";
+import Web3 from "web3";
 
 function App() {
+  let web3 = new Web3("HTTP://127.0.0.1:8545");
+  console.log(
+    web3.eth.getBalance("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266")
+  );
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <h1>hellow world</h1>
+      {web3.eth.accounts[0]}
+    </>
   );
 }
 
