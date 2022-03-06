@@ -42,7 +42,9 @@
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.5",
+    "@nomiclabs/hardhat-truffle5": "^2.0.5",
     "@nomiclabs/hardhat-waffle": "^2.0.3",
+    "@openzeppelin/contracts": "^4.5.0",
     "assert": "^2.0.0",
     "chai": "^4.3.6",
     "crypto-browserify": "^3.12.0",

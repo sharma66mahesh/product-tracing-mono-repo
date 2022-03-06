@@ -33,7 +33,7 @@ module.exports = {
     sources: "./contracts",
     tests: "./test",
     cache: "./cache",
-    artifacts: "./artifacts",
+    artifacts: "./src/artifacts",
   },
   mocha: {
     timeout: 40000,
