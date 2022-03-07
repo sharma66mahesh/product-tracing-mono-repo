@@ -8,6 +8,7 @@ contract Product is Ownable{
         uint productNumber;
         bool isSold;
     }
+    event Sold(uint productNumber, bool sold);
     mapping(uint => Item) public productDetail;
 
     modifier productExit(uint _productNumber){
