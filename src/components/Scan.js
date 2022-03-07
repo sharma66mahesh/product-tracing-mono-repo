@@ -7,7 +7,7 @@ function Scan() {
   const [scan, setScan] = useState(false);
   const [buy, setBuyStatus] = useState(false);
   const [productMessage, setProductMessage] = useState(
-    "Please Scan QR Code on Product"
+    "Please Scan QR Code on Product to Buy"
   );
   let capture = (
     <QrReader
