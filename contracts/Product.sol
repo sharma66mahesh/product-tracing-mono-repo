@@ -6,28 +6,38 @@ contract Product is Ownable{
     struct Item{
         uint manufacturedDate;
         uint productNumber;
-        bool isSold;
+        status status_type;
     }
-    event Sold(uint productNumber, bool sold);
+    enum status
+    {fake,
+    unsold,
+    sold
+      }
+
     mapping(uint => Item) public productDetail;
 
+    modifier productSold(uint _productNumber){
+    require(productDetail[_productNumber].status_type==status.unsold,"Products has already been sold");
+        _;
+    }
+
     modifier productExit(uint _productNumber){
-    require(productDetail[_productNumber].productNumber==_productNumber && productDetail[_productNumber].isSold==false,"Products doesn't exits");
+    require(productDetail[_productNumber].status_type!=status.fake,"Products doesn't exits");
         _;
     }
 
     function renounceOwnership() public override{
     }
 
-    function getInfoOfProduct(uint _productNumber) public view productExit(_productNumber) returns(bool) {
-        return(productDetail[_productNumber].isSold);
+    function getInfoOfProduct(uint _productNumber) public view productExit(_productNumber) returns(status) {
+        return(productDetail[_productNumber].status_type);
     }
 
     function registerProduct(uint _manufactureDate, uint _productNumber) public onlyOwner{
-        productDetail[_productNumber]=Item(_manufactureDate,_productNumber,false);
+        productDetail[_productNumber]=Item(_manufactureDate,_productNumber,status.unsold);
     }
 
-    function buy(uint _productNumber) public productExit(_productNumber) {
-        productDetail[_productNumber].isSold=true;
+    function buy(uint _productNumber) public productExit(_productNumber) productSold(_productNumber) {
+        productDetail[_productNumber].status_type=status.sold;
     }
 }
