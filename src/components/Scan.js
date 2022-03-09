@@ -3,13 +3,19 @@ import { QrReader } from "react-qr-reader";
 import "../scss/Scan.css";
 import { useContext, useEffect } from "react";
 import { uploadContext } from "../ContextAPI/UploadContextProvider";
-const product_status = ["Fake", "Original and UnSold ", "Sold"];
+const product_status = [
+  "Fake Product",
+  "Original and UnSold ",
+  "Orginal and Sold",
+  "This is not a product, Please scan another product ",
+];
 
 function Scan() {
   const ctx = useContext(uploadContext);
+  window.ct = ctx;
   const [data, setData] = useState("No result!");
   const [scan, setScan] = useState(false);
-  const [status, setstatus] = useState("Getting Data");
+  const [status, setstatus] = useState("");
   const [buy, setBuyStatus] = useState(false);
   const [productMessage, setProductMessage] = useState(
     "Please Scan QR Code on Product to Buy"
@@ -19,9 +25,14 @@ function Scan() {
   useEffect(() => {}, []);
 
   async function getData(value) {
+    if (!parseInt(value)) {
+      setstatus(product_status[3]);
+      return product_status[3];
+    }
     const data = await ctx.productContract.methods
       .getInfoOfProduct(parseInt(value))
       .call();
+    // console.log(product_status[parseInt(data)]);
     setstatus(product_status[parseInt(data)]);
     return product_status[parseInt(data)];
   }
@@ -52,16 +63,23 @@ function Scan() {
         window.ethereum.on("accountsChanged", function (accounts) {
           setcurrentAccount(accounts);
         });
+        if (
+          parseInt(
+            await ctx.productContract.methods
+              .getInfoOfProduct(parseInt(data))
+              .call()
+          )
+        ) {
+          console.log("ietem");
+          ctx.productContract.methods
+            .buy(parseInt(data))
+            .send({ from: currentAccount[0] });
+          setstatus(product_status[2]);
+          setProductMessage("Item has been bought");
+          setBuyStatus(false);
+        }
       }
       onInit();
-      console.log(currentAccount[0]);
-      ctx.productContract.methods
-        .buy(parseInt(data))
-        .send({ from: currentAccount[0] });
-      setProductMessage("Item has been bought");
-    } else {
-      //   setProductMessage("Item has already been or not bought");
-      setBuyStatus(false);
     }
   };
 
@@ -77,8 +95,8 @@ function Scan() {
         </button>
       )}
       {scan && capture}
-      <h3>{data}</h3>
-      <h3>{status}</h3>
+      {scan && <h3>{data}</h3>}
+      {scan && <h3>{status}</h3>}
       <h5>{productMessage}</h5>
       <button className="buyButton" onClick={buyBtnHandler}>
         Buy

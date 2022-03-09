@@ -3,41 +3,41 @@ pragma solidity >=0.7.0 <0.9.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Product is Ownable{
-    struct Item{
-        uint manufacturedDate;
-        uint productNumber;
-        status status_type;
-    }
     enum status
     {fake,
     unsold,
     sold
       }
 
-    mapping(uint => Item) public productDetail;
+    mapping(bytes32 => status ) public productDetail;
+
 
     modifier productSold(uint _productNumber){
-    require(productDetail[_productNumber].status_type==status.unsold,"Products has already been sold");
+    require(productDetail[hash(_productNumber)]==status.unsold,"Products has already been sold");
         _;
     }
 
     modifier productExit(uint _productNumber){
-    require(productDetail[_productNumber].status_type!=status.fake,"Products doesn't exits");
+    require(productDetail[hash(_productNumber)]!=status.fake,"Products doesn't exits");
         _;
     }
+
+   function hash(uint _string) public pure returns(bytes32) {
+          return keccak256(abi.encodePacked(_string));}
 
     function renounceOwnership() public override{
     }
 
-    function getInfoOfProduct(uint _productNumber) public view productExit(_productNumber) returns(status) {
-        return(productDetail[_productNumber].status_type);
+    function getInfoOfProduct(uint _productNumber) public view returns(status) {
+        return(productDetail[hash(_productNumber)]);
     }
 
-    function registerProduct(uint _manufactureDate, uint _productNumber) public onlyOwner{
-        productDetail[_productNumber]=Item(_manufactureDate,_productNumber,status.unsold);
+     function registerProduct(uint _productNumber) public onlyOwner{
+        productDetail[hash(_productNumber)]=status.unsold;
     }
 
     function buy(uint _productNumber) public productExit(_productNumber) productSold(_productNumber) {
-        productDetail[_productNumber].status_type=status.sold;
+        productDetail[hash(_productNumber)]=status.sold;
     }
+
 }

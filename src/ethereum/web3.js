@@ -16,7 +16,7 @@ export const getProductContract = async () => {
   const web3 = await getWeb3();
   const productContract = await new web3.eth.Contract(
     product.abi,
-    "0xc5a5C42992dECbae36851359345FE25997F5C42d"
+    "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
   );
   return productContract;
 };

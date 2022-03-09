@@ -31,10 +31,7 @@ function InputField({ getNumber }) {
     // window.ct = ctx;
     // console.log(typeof(accounts[0]));
     ctx.productContract.methods
-      .registerProduct(
-        dateOfManufacture.current.value,
-        productNumber.current.value
-      )
+      .registerProduct(productNumber.current.value)
       .send({ from: accounts[0] });
 
     getNumber(productNumber.current.value);
